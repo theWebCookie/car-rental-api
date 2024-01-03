@@ -1,6 +1,9 @@
 using CarRent.Api.Endpoints;
+using CarRent.Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<ICarsRepository, InMemCarsRepository>();
+
 var app = builder.Build();
 
 app.MapCarsEndpoints();

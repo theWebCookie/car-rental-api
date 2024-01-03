@@ -8,26 +8,24 @@ public static class CarsEndpoints
   const string GetCarEndpointName = "GetCarById";
   public static RouteGroupBuilder MapCarsEndpoints(this IEndpointRouteBuilder routes)
   {
-    InMemCarsRepository repository = new();
-
     var group = routes.MapGroup("/cars").WithParameterValidation();
 
-    group.MapGet("/", () => repository.GetAll());
+    group.MapGet("/", (ICarsRepository repository) => repository.GetAll());
 
-    group.MapGet("/{id}", (int id) =>
+    group.MapGet("/{id}", (ICarsRepository repository, int id) =>
     {
       Car? car = repository.Get(id);
       return car is not null ? Results.Ok(car) : Results.NotFound();
     })
     .WithName(GetCarEndpointName);
 
-    group.MapPost("/", (Car car) =>
+    group.MapPost("/", (ICarsRepository repository, Car car) =>
     {
       repository.Create(car);
       return Results.CreatedAtRoute(GetCarEndpointName, new { id = car.Id }, car);
     });
 
-    group.MapPut("/{id}", (int id, Car updatedCar) =>
+    group.MapPut("/{id}", (ICarsRepository repository, int id, Car updatedCar) =>
     {
       Car? existingCar = repository.Get(id);
       if (existingCar is null)
@@ -51,7 +49,7 @@ public static class CarsEndpoints
       return Results.NoContent();
     });
 
-    group.MapDelete("/{id}", (int id) =>
+    group.MapDelete("/{id}", (ICarsRepository repository, int id) =>
     {
       Car? car = repository.Get(id);
       if (car is not null)

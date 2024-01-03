@@ -1,10 +1,10 @@
 using CarRent.Api.Entities;
 
-namespace CarRent.Api.Repositories
+namespace CarRent.Api.Repositories;
+
+public class InMemCarsRepository : ICarsRepository
 {
-  public class InMemCarsRepository
-  {
-    private readonly List<Car> cars = new()
+  private readonly List<Car> cars = new()
     {
       new Car()
       {
@@ -53,32 +53,31 @@ namespace CarRent.Api.Repositories
       }
     };
 
-    public IEnumerable<Car> GetAll()
-    {
-      return cars;
-    }
+  public IEnumerable<Car> GetAll()
+  {
+    return cars;
+  }
 
-    public Car? Get(int id)
-    {
-      return cars.Find(car => car.Id == id);
-    }
+  public Car? Get(int id)
+  {
+    return cars.Find(car => car.Id == id);
+  }
 
-    public void Create(Car car)
-    {
-      car.Id = cars.Max(car => car.Id) + 1;
-      cars.Add(car);
-    }
+  public void Create(Car car)
+  {
+    car.Id = cars.Max(car => car.Id) + 1;
+    cars.Add(car);
+  }
 
-    public void Update(Car updatedCar)
-    {
-      var index = cars.FindIndex(car => car.Id == updatedCar.Id);
-      cars[index] = updatedCar;
-    }
+  public void Update(Car updatedCar)
+  {
+    var index = cars.FindIndex(car => car.Id == updatedCar.Id);
+    cars[index] = updatedCar;
+  }
 
-    public void Delete(int id)
-    {
-      var index = cars.FindIndex(car => car.Id == id);
-      cars.RemoveAt(index);
-    }
+  public void Delete(int id)
+  {
+    var index = cars.FindIndex(car => car.Id == id);
+    cars.RemoveAt(index);
   }
 }
