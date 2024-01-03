@@ -1,3 +1,4 @@
+using CarRent.Api.Dtos;
 using CarRent.Api.Entities;
 using CarRent.Api.Repositories;
 
@@ -10,22 +11,37 @@ public static class CarsEndpoints
   {
     var group = routes.MapGroup("/cars").WithParameterValidation();
 
-    group.MapGet("/", (ICarsRepository repository) => repository.GetAll());
+    group.MapGet("/", (ICarsRepository repository) => repository.GetAll().Select(car => car.AsDto()));
 
     group.MapGet("/{id}", (ICarsRepository repository, int id) =>
     {
       Car? car = repository.Get(id);
-      return car is not null ? Results.Ok(car) : Results.NotFound();
+      return car is not null ? Results.Ok(car.AsDto()) : Results.NotFound();
     })
     .WithName(GetCarEndpointName);
 
-    group.MapPost("/", (ICarsRepository repository, Car car) =>
+    group.MapPost("/", (ICarsRepository repository, CreateCarDto carDto) =>
     {
+      Car car = new()
+      {
+        Title = carDto.Title,
+        ImageUri = carDto.ImageUri,
+        Fuel = carDto.Fuel,
+        Luggage = carDto.Luggage,
+        Doors = carDto.Doors,
+        Seats = carDto.Seats,
+        Transmission = carDto.Transmission,
+        FuelUsage = carDto.FuelUsage,
+        CarType = carDto.CarType,
+        Description = carDto.Description,
+        Price = carDto.Price,
+      };
+
       repository.Create(car);
       return Results.CreatedAtRoute(GetCarEndpointName, new { id = car.Id }, car);
     });
 
-    group.MapPut("/{id}", (ICarsRepository repository, int id, Car updatedCar) =>
+    group.MapPut("/{id}", (ICarsRepository repository, int id, UpdateCarDto updatedCarDto) =>
     {
       Car? existingCar = repository.Get(id);
       if (existingCar is null)
@@ -33,17 +49,17 @@ public static class CarsEndpoints
         return Results.NotFound();
       }
 
-      existingCar.Title = updatedCar.Title;
-      existingCar.ImageUri = updatedCar.ImageUri;
-      existingCar.Fuel = updatedCar.Fuel;
-      existingCar.Luggage = updatedCar.Luggage;
-      existingCar.Doors = updatedCar.Doors;
-      existingCar.Seats = updatedCar.Seats;
-      existingCar.FuelUsage = updatedCar.FuelUsage;
-      existingCar.CarType = updatedCar.CarType;
-      existingCar.Transmission = updatedCar.Transmission;
-      existingCar.Description = updatedCar.Description;
-      existingCar.Price = updatedCar.Price;
+      existingCar.Title = updatedCarDto.Title;
+      existingCar.ImageUri = updatedCarDto.ImageUri;
+      existingCar.Fuel = updatedCarDto.Fuel;
+      existingCar.Luggage = updatedCarDto.Luggage;
+      existingCar.Doors = updatedCarDto.Doors;
+      existingCar.Seats = updatedCarDto.Seats;
+      existingCar.FuelUsage = updatedCarDto.FuelUsage;
+      existingCar.CarType = updatedCarDto.CarType;
+      existingCar.Transmission = updatedCarDto.Transmission;
+      existingCar.Description = updatedCarDto.Description;
+      existingCar.Price = updatedCarDto.Price;
 
       repository.Update(existingCar);
       return Results.NoContent();
