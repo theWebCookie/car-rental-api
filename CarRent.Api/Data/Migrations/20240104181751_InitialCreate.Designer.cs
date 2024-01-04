@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRent.Api.Data.Migrations
 {
     [DbContext(typeof(CarRentContext))]
-    [Migration("20240104170442_InitialCreate")]
+    [Migration("20240104181751_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -43,8 +43,9 @@ namespace CarRent.Api.Data.Migrations
                     b.Property<int>("Doors")
                         .HasColumnType("int");
 
-                    b.Property<double>("Fuel")
-                        .HasColumnType("float");
+                    b.Property<string>("FuelType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("FuelUsage")
                         .HasColumnType("float");

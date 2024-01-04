@@ -26,7 +26,7 @@ public static class CarsEndpoints
       {
         Title = carDto.Title,
         ImageUri = carDto.ImageUri,
-        Fuel = carDto.Fuel,
+        FuelType = carDto.FuelType,
         Luggage = carDto.Luggage,
         Doors = carDto.Doors,
         Seats = carDto.Seats,
@@ -51,7 +51,7 @@ public static class CarsEndpoints
 
       existingCar.Title = updatedCarDto.Title;
       existingCar.ImageUri = updatedCarDto.ImageUri;
-      existingCar.Fuel = updatedCarDto.Fuel;
+      existingCar.FuelType = updatedCarDto.FuelType;
       existingCar.Luggage = updatedCarDto.Luggage;
       existingCar.Doors = updatedCarDto.Doors;
       existingCar.Seats = updatedCarDto.Seats;

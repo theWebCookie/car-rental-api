@@ -6,7 +6,7 @@ public record CarDto(
     int Id,
     string Title,
     string ImageUri,
-    double Fuel,
+    string FuelType,
     double Luggage,
     int Doors,
     int Seats,
@@ -19,7 +19,7 @@ public record CarDto(
 public record CreateCarDto(
   [Required] string Title,
   [Required][Url][StringLength(100)] string ImageUri,
-  [Required] double Fuel,
+  [Required] string FuelType,
   [Required] double Luggage,
   [Required] int Doors,
   [Required] int Seats,
@@ -32,7 +32,7 @@ public record CreateCarDto(
 public record UpdateCarDto(
   [Required] string Title,
   [Required][Url][StringLength(100)] string ImageUri,
-  [Required] double Fuel,
+  [Required] string FuelType,
   [Required] double Luggage,
   [Required] int Doors,
   [Required] int Seats,

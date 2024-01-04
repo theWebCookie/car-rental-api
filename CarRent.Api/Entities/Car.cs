@@ -11,7 +11,7 @@ namespace CarRent.Api.Entities
     [StringLength(100)]
     public required string ImageUri { get; set; }
     [Required]
-    public required double Fuel { get; set; }
+    public required string FuelType { get; set; }
     [Required]
     public required double Luggage { get; set; }
     [Required]

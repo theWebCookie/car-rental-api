@@ -18,7 +18,7 @@ namespace CarRent.Api.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUri = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Fuel = table.Column<double>(type: "float", nullable: false),
+                    FuelType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Luggage = table.Column<double>(type: "float", nullable: false),
                     Doors = table.Column<int>(type: "int", nullable: false),
                     Seats = table.Column<int>(type: "int", nullable: false),

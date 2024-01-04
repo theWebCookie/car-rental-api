@@ -9,7 +9,7 @@ public static class EntityExtensions
             car.Id,
             car.Title,
             car.ImageUri,
-            car.Fuel,
+            car.FuelType,
             car.Luggage,
             car.Doors,
             car.Seats,

@@ -40,8 +40,9 @@ namespace CarRent.Api.Data.Migrations
                     b.Property<int>("Doors")
                         .HasColumnType("int");
 
-                    b.Property<double>("Fuel")
-                        .HasColumnType("float");
+                    b.Property<string>("FuelType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("FuelUsage")
                         .HasColumnType("float");
