@@ -11,16 +11,16 @@ public static class CarsEndpoints
   {
     var group = routes.MapGroup("/cars").WithParameterValidation();
 
-    group.MapGet("/", (ICarsRepository repository) => repository.GetAll().Select(car => car.AsDto()));
+    group.MapGet("/", async (ICarsRepository repository) => (await repository.GetAllAsync()).Select(car => car.AsDto()));
 
-    group.MapGet("/{id}", (ICarsRepository repository, int id) =>
+    group.MapGet("/{id}", async (ICarsRepository repository, int id) =>
     {
-      Car? car = repository.Get(id);
+      Car? car = await repository.GetAsync(id);
       return car is not null ? Results.Ok(car.AsDto()) : Results.NotFound();
     })
     .WithName(GetCarEndpointName);
 
-    group.MapPost("/", (ICarsRepository repository, CreateCarDto carDto) =>
+    group.MapPost("/", async (ICarsRepository repository, CreateCarDto carDto) =>
     {
       Car car = new()
       {
@@ -37,13 +37,13 @@ public static class CarsEndpoints
         Price = carDto.Price,
       };
 
-      repository.Create(car);
+      await repository.CreateAsync(car);
       return Results.CreatedAtRoute(GetCarEndpointName, new { id = car.Id }, car);
     });
 
-    group.MapPut("/{id}", (ICarsRepository repository, int id, UpdateCarDto updatedCarDto) =>
+    group.MapPut("/{id}", async (ICarsRepository repository, int id, UpdateCarDto updatedCarDto) =>
     {
-      Car? existingCar = repository.Get(id);
+      Car? existingCar = await repository.GetAsync(id);
       if (existingCar is null)
       {
         return Results.NotFound();
@@ -61,16 +61,16 @@ public static class CarsEndpoints
       existingCar.Description = updatedCarDto.Description;
       existingCar.Price = updatedCarDto.Price;
 
-      repository.Update(existingCar);
+      await repository.UpdateAsync(existingCar);
       return Results.NoContent();
     });
 
-    group.MapDelete("/{id}", (ICarsRepository repository, int id) =>
+    group.MapDelete("/{id}", async (ICarsRepository repository, int id) =>
     {
-      Car? car = repository.Get(id);
+      Car? car = await repository.GetAsync(id);
       if (car is not null)
       {
-        repository.Delete(id);
+        await repository.DeleteAsync(id);
       }
 
       return Results.NoContent();

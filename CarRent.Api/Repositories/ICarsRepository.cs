@@ -4,9 +4,9 @@ namespace CarRent.Api.Repositories;
 
 public interface ICarsRepository
 {
-  void Create(Car car);
-  void Delete(int id);
-  Car? Get(int id);
-  IEnumerable<Car> GetAll();
-  void Update(Car updatedCar);
+  Task CreateAsync(Car car);
+  Task DeleteAsync(int id);
+  Task<Car?> GetAsync(int id);
+  Task<IEnumerable<Car>> GetAllAsync();
+  Task UpdateAsync(Car updatedCar);
 }

@@ -13,29 +13,29 @@ public class EntityFrameworkCarsRepository : ICarsRepository
         this.dbContext = dbContext;
     }
 
-    public IEnumerable<Car> GetAll()
+    public async Task<IEnumerable<Car>> GetAllAsync()
     {
-        return dbContext.Cars.AsNoTracking().ToList();
+        return await dbContext.Cars.AsNoTracking().ToListAsync();
     }
-    public Car? Get(int id)
+    public async Task<Car?> GetAsync(int id)
     {
-        return dbContext.Cars.Find(id);
+        return await dbContext.Cars.FindAsync(id);
     }
 
-    public void Create(Car car)
+    public async Task CreateAsync(Car car)
     {
         dbContext.Cars.Add(car);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 
-    public void Update(Car updatedCar)
+    public async Task UpdateAsync(Car updatedCar)
     {
         dbContext.Update(updatedCar);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 
-    public void Delete(int id)
+    public async Task DeleteAsync(int id)
     {
-        dbContext.Cars.Where(car => car.Id == id).ExecuteDelete();
+        await dbContext.Cars.Where(car => car.Id == id).ExecuteDeleteAsync();
     }
 }

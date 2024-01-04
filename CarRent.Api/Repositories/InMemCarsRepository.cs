@@ -53,31 +53,37 @@ public class InMemCarsRepository : ICarsRepository
       }
     };
 
-  public IEnumerable<Car> GetAll()
+  public async Task<IEnumerable<Car>> GetAllAsync()
   {
-    return cars;
+    return await Task.FromResult(cars);
   }
 
-  public Car? Get(int id)
+  public async Task<Car?> GetAsync(int id)
   {
-    return cars.Find(car => car.Id == id);
+    return await Task.FromResult(cars.Find(car => car.Id == id));
   }
 
-  public void Create(Car car)
+  public async Task CreateAsync(Car car)
   {
     car.Id = cars.Max(car => car.Id) + 1;
     cars.Add(car);
+
+    await Task.CompletedTask;
   }
 
-  public void Update(Car updatedCar)
+  public async Task UpdateAsync(Car updatedCar)
   {
     var index = cars.FindIndex(car => car.Id == updatedCar.Id);
     cars[index] = updatedCar;
+
+    await Task.CompletedTask;
   }
 
-  public void Delete(int id)
+  public async Task DeleteAsync(int id)
   {
     var index = cars.FindIndex(car => car.Id == id);
     cars.RemoveAt(index);
+
+    await Task.CompletedTask;
   }
 }
