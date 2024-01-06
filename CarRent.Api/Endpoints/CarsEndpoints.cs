@@ -18,7 +18,8 @@ public static class CarsEndpoints
       Car? car = await repository.GetAsync(id);
       return car is not null ? Results.Ok(car.AsDto()) : Results.NotFound();
     })
-    .WithName(GetCarEndpointName);
+    .WithName(GetCarEndpointName)
+    .RequireAuthorization();
 
     group.MapPost("/", async (ICarsRepository repository, CreateCarDto carDto) =>
     {
@@ -39,7 +40,8 @@ public static class CarsEndpoints
 
       await repository.CreateAsync(car);
       return Results.CreatedAtRoute(GetCarEndpointName, new { id = car.Id }, car);
-    });
+    })
+    .RequireAuthorization();
 
     group.MapPut("/{id}", async (ICarsRepository repository, int id, UpdateCarDto updatedCarDto) =>
     {
@@ -63,7 +65,8 @@ public static class CarsEndpoints
 
       await repository.UpdateAsync(existingCar);
       return Results.NoContent();
-    });
+    })
+    .RequireAuthorization();
 
     group.MapDelete("/{id}", async (ICarsRepository repository, int id) =>
     {
@@ -74,7 +77,8 @@ public static class CarsEndpoints
       }
 
       return Results.NoContent();
-    });
+    }).RequireAuthorization();
+
     return group;
   }
 }
