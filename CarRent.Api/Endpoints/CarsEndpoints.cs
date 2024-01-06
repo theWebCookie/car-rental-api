@@ -42,7 +42,10 @@ public static class CarsEndpoints
       await repository.CreateAsync(car);
       return Results.CreatedAtRoute(GetCarEndpointName, new { id = car.Id }, car);
     })
-    .RequireAuthorization(Policies.WriteAccess);
+    .RequireAuthorization(policy =>
+    {
+      policy.RequireRole("Admin");
+    });
 
     group.MapPut("/{id}", async (ICarsRepository repository, int id, UpdateCarDto updatedCarDto) =>
     {
@@ -67,7 +70,10 @@ public static class CarsEndpoints
       await repository.UpdateAsync(existingCar);
       return Results.NoContent();
     })
-    .RequireAuthorization(Policies.WriteAccess);
+    .RequireAuthorization(policy =>
+    {
+      policy.RequireRole("Admin");
+    });
 
     group.MapDelete("/{id}", async (ICarsRepository repository, int id) =>
     {
@@ -78,7 +84,11 @@ public static class CarsEndpoints
       }
 
       return Results.NoContent();
-    }).RequireAuthorization(Policies.WriteAccess);
+    })
+    .RequireAuthorization(policy =>
+    {
+      policy.RequireRole("Admin");
+    });
 
     return group;
   }
