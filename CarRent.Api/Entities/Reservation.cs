@@ -6,8 +6,6 @@ public class Reservation
 {
     public int Id { get; set; }
     [Required]
-    public required int Quantity { get; set; }
-    [Required]
     public required DateTime StartDate { get; set; }
     [Required]
     public required DateTime EndDate { get; set; }
