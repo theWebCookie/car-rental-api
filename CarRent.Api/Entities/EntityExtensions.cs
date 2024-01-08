@@ -20,4 +20,29 @@ public static class EntityExtensions
             car.Price
         );
     }
+
+    public static ReservationDto AsDto(this Reservation reservation)
+    {
+        return new ReservationDto(
+            reservation.Id,
+            reservation.StartDate,
+            reservation.EndDate,
+            reservation.UserId,
+            reservation.User,
+            reservation.CarId,
+            reservation.Car
+        );
+    }
+
+    public static UserDto AsDto(this User user)
+    {
+        return new UserDto(
+            user.Id,
+            user.FirstName,
+            user.SeccondName,
+            user.Email,
+            user.Password,
+            user.Reservations
+        );
+    }
 }
