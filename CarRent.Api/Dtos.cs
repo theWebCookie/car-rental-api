@@ -51,27 +51,21 @@ public record ReservationDto(
     DateTime StartDate,
     DateTime EndDate,
     int UserId,
-    User User,
-    int CarId,
-    Car Car
+    int CarId
 );
 
 public record CreateReservationDto(
   [Required] DateTime StartDate,
   [Required] DateTime EndDate,
   [Required] int UserId,
-  [Required] User User,
-  [Required] int CarId,
-  [Required] Car Car
+  [Required] int CarId
 );
 
 public record UpdateReservationDto(
   [Required] DateTime StartDate,
   [Required] DateTime EndDate,
   [Required] int UserId,
-  [Required] User User,
-  [Required] int CarId,
-  [Required] Car Car
+  [Required] int CarId
 );
 
 public record UserDto(
@@ -79,22 +73,19 @@ public record UserDto(
     string FirstName,
     string SeccondName,
     string Email,
-    string Password,
-    ICollection<Reservation>? Reservations
+    string Password
 );
 
 public record CreateUserDto(
   [Required] string FirstName,
   [Required] string SeccondName,
   [Required] string Email,
-  [Required] string Password,
-  ICollection<Reservation>? Reservations
+  [Required] string Password
 );
 
 public record UpdateUserDto(
   [Required] string FirstName,
   [Required] string SeccondName,
   [Required] string Email,
-  [Required] string Password,
-  ICollection<Reservation>? Reservations
+  [Required] string Password
 );

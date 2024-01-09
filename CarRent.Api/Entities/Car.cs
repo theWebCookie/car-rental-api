@@ -28,7 +28,5 @@ namespace CarRent.Api.Entities
     public required string Description { get; set; }
     [Required]
     public required decimal Price { get; set; }
-
-    public ICollection<Reservation>? Reservations { get; set; }
   }
 }
