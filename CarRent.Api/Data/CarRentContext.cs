@@ -15,8 +15,6 @@ public class CarRentContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new CarConfiguration());
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
-        modelBuilder.ApplyConfiguration(new ReservationConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }
