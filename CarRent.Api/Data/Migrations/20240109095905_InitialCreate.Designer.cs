@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRent.Api.Data.Migrations
 {
     [DbContext(typeof(CarRentContext))]
-    [Migration("20240108102354_InitialCreate")]
+    [Migration("20240109095905_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -93,9 +93,6 @@ namespace CarRent.Api.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -103,10 +100,6 @@ namespace CarRent.Api.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CarId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -138,35 +131,6 @@ namespace CarRent.Api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("CarRent.Api.Entities.Reservation", b =>
-                {
-                    b.HasOne("CarRent.Api.Entities.Car", "Car")
-                        .WithMany("Reservations")
-                        .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CarRent.Api.Entities.User", "User")
-                        .WithMany("Reservations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Car");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CarRent.Api.Entities.Car", b =>
-                {
-                    b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("CarRent.Api.Entities.User", b =>
-                {
-                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }
