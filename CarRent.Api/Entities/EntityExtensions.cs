@@ -28,9 +28,7 @@ public static class EntityExtensions
             reservation.StartDate,
             reservation.EndDate,
             reservation.UserId,
-            reservation.User,
-            reservation.CarId,
-            reservation.Car
+            reservation.CarId
         );
     }
 
@@ -41,8 +39,7 @@ public static class EntityExtensions
             user.FirstName,
             user.SeccondName,
             user.Email,
-            user.Password,
-            user.Reservations
+            user.Password
         );
     }
 }
