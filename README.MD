@@ -14,25 +14,25 @@
 - **Endpoint**: `/cars/{id}`
 - **Action**: Retrieves information about a car based on the provided ID.
 
-### 2. Retrieve a Car by carType
+### 3. Retrieve a Car by carType
 
 - **Method**: GET
 - **Endpoint**: `/cars/type/{carType}`
 - **Action**: Retrieves information about a car based on the provided carType.
 
-### 3. Add a new Car
+### 4. Add a new Car
 
 - **Method**: POST
 - **Endpoint**: `/cars/`
 - **Action**: Creates a new car based on the provided data.
 
-### 4. Update information for a Car by ID
+### 5. Update information for a Car by ID
 
 - **Method**: PUT
 - **Endpoint**: `/cars/{id}`
 - **Action**: Updates information about a car based on the provided data.
 
-### 5. Delete a Car by ID
+### 6. Delete a Car by ID
 
 - **Method**: DELETE
 - **Endpoint**: `/cars/{id}`
