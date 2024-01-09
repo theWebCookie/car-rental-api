@@ -14,6 +14,12 @@
 - **Endpoint**: `/cars/{id}`
 - **Action**: Retrieves information about a car based on the provided ID.
 
+### 2. Retrieve a Car by carType
+
+- **Method**: GET
+- **Endpoint**: `/cars/type/{carType}`
+- **Action**: Retrieves information about a car based on the provided carType.
+
 ### 3. Add a new Car
 
 - **Method**: POST

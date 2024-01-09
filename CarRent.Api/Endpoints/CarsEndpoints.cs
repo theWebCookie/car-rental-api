@@ -22,6 +22,20 @@ public static class CarsEndpoints
     .WithName(GetCarEndpointName)
     .RequireAuthorization(Policies.ReadAccess);
 
+    group.MapGet("/type/{carType}", async (ICarsRepository repository, string carType) =>
+    {
+      var allCars = await repository.GetAllAsync();
+      var carsOfType = allCars.Where(car => car.CarType == carType);
+
+      if (carsOfType == null || !carsOfType.Any())
+      {
+        return Results.NotFound();
+      }
+
+      var carDtos = carsOfType.Select(car => car.AsDto());
+      return Results.Ok(carDtos);
+    }).RequireAuthorization(Policies.ReadAccess);
+
     group.MapPost("/", async (ICarsRepository repository, CreateCarDto carDto) =>
     {
       Car car = new()
