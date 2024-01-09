@@ -24,6 +24,28 @@ public static class UsersEndpoints
 
     group.MapPost("/", async (IUsersRepository repository, CreateUserDto userDto) =>
     {
+      var existingUser = await repository.GetByEmailAsync(userDto.Email);
+
+      if (existingUser != null)
+      {
+        return Results.Conflict(new { message = "User with the given email already exists." });
+      }
+
+      if (string.IsNullOrEmpty(userDto.FirstName) || string.IsNullOrEmpty(userDto.SeccondName))
+      {
+        return Results.BadRequest(new { message = "Invalid name!" });
+      }
+
+      if (string.IsNullOrEmpty(userDto.Email) || !userDto.Email.Contains('@'))
+      {
+        return Results.BadRequest(new { message = "Invalid email!" });
+      }
+
+      if (string.IsNullOrEmpty(userDto.Password) || userDto.Password.Trim().Length < 7)
+      {
+        return Results.BadRequest(new { message = "Invalid input - password should be at least 7 characters long!" });
+      }
+
       User user = new()
       {
         FirstName = userDto.FirstName,

@@ -23,6 +23,11 @@ namespace CarRent.Api.Repositories
       return await dbContext.Users.FindAsync(id);
     }
 
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+      return await dbContext.Users.FirstOrDefaultAsync(user => user.Email == email);
+    }
+
     public async Task CreateAsync(User user)
     {
       dbContext.Users.Add(user);
