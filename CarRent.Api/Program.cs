@@ -1,6 +1,7 @@
 using CarRent.Api.Authorization;
 using CarRent.Api.Data;
 using CarRent.Api.Endpoints;
+using CarRent.Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRepositories(builder.Configuration);
@@ -12,4 +13,6 @@ var app = builder.Build();
 
 await app.Services.InitializeDbAsync();
 app.MapCarsEndpoints();
+app.MapUsersEndpoints();
+app.MapReservationsEndpoints();
 app.Run();
