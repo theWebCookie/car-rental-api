@@ -16,6 +16,8 @@ public static class DataExtensions
     {
         var connString = configuration.GetConnectionString("CrContext");
         services.AddSqlServer<CarRentContext>(connString).AddScoped<ICarsRepository, EntityFrameworkCarsRepository>();
+        services.AddSqlServer<CarRentContext>(connString).AddScoped<IUsersRepository, EntityFrameworkUsersRepository>();
+        services.AddSqlServer<CarRentContext>(connString).AddScoped<IReservationsRepository, EntityFrameworkReservationsRepository>();
         return services;
     }
 }
