@@ -6,8 +6,8 @@ public static class AuthorizationExtensions
   {
     services.AddAuthorization(options =>
     {
-      options.AddPolicy(Policies.ReadAccess, builder => builder.RequireClaim("scope", "cars:read"));
-      options.AddPolicy(Policies.WriteAccess, builder => builder.RequireClaim("scope", "cars:write")
+      options.AddPolicy(Policies.ReadAccess, builder => builder.RequireClaim("scope", "read"));
+      options.AddPolicy(Policies.WriteAccess, builder => builder.RequireClaim("scope", "write")
                                                                 .RequireRole("Admin"));
     });
     return services;
