@@ -85,6 +85,11 @@ public record UserDto(
     string Password
 );
 
+public record LoginDto(
+  [Required] string Email,
+  [Required] string Password
+);
+
 public record CreateUserDto(
   [Required] string FirstName,
   [Required] string SeccondName,

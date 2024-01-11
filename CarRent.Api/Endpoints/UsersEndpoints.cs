@@ -59,6 +59,19 @@ public static class UsersEndpoints
     })
     .RequireAuthorization(Policies.WriteAccess);
 
+    group.MapPost("/login", async (IUsersRepository repository, LoginDto loginDto) =>
+    {
+      var user = await repository.GetByEmailAsync(loginDto.Email);
+
+      if (user != null && user.Password == loginDto.Password)
+      {
+        return Results.Ok(new { message = "Login successful!" });
+      }
+
+      return Results.BadRequest(new { message = "Invalid email or password." });
+    })
+    .RequireAuthorization(Policies.WriteAccess);
+
     group.MapPut("/{id}", async (IUsersRepository repository, int id, UpdateUserDto updatedUserDto) =>
     {
       User? existingUser = await repository.GetAsync(id);
