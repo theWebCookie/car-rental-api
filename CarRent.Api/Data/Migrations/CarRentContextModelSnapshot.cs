@@ -30,7 +30,17 @@ namespace CarRent.Api.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("AvailabilityEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("AvailabilityStart")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CarType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

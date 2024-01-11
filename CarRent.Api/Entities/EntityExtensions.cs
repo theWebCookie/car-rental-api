@@ -17,7 +17,10 @@ public static class EntityExtensions
             car.FuelUsage,
             car.CarType,
             car.Description,
-            car.Price
+            car.Price,
+            car.City,
+            car.AvailabilityStart,
+            car.AvailabilityEnd
         );
     }
 

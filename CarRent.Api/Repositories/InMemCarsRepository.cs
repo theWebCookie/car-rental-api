@@ -20,6 +20,9 @@ public class InMemCarsRepository : ICarsRepository
         Transmission = "automat",
         Description = "aaaaaaaaaaaaaaaaaaaaaaaaa",
         Price = 200,
+        City = "Lodz",
+        AvailabilityStart = new DateTime(2024, 1, 11),
+        AvailabilityEnd = new DateTime(2024, 1, 15)
       },
         new Car()
       {
@@ -35,6 +38,9 @@ public class InMemCarsRepository : ICarsRepository
         Transmission = "automat",
         Description = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         Price = 500,
+        City = "Lodz",
+        AvailabilityStart = new DateTime(2024, 1, 11),
+        AvailabilityEnd = new DateTime(2024, 1, 15)
       },
         new Car()
       {
@@ -50,6 +56,9 @@ public class InMemCarsRepository : ICarsRepository
         Transmission = "automat",
         Description = "ccccccccccccccccccccccccccccc",
         Price = 150,
+        City = "Lodz",
+        AvailabilityStart = new DateTime(2024, 1, 11),
+        AvailabilityEnd = new DateTime(2024, 1, 15)
       }
     };
 

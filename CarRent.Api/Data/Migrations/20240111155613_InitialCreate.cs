@@ -27,7 +27,10 @@ namespace CarRent.Api.Data.Migrations
                     CarType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Transmission = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AvailabilityStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AvailabilityEnd = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

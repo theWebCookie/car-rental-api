@@ -51,6 +51,9 @@ public static class CarsEndpoints
         CarType = carDto.CarType,
         Description = carDto.Description,
         Price = carDto.Price,
+        City = carDto.City,
+        AvailabilityStart = carDto.AvailabilityStart,
+        AvailabilityEnd = carDto.AvailabilityEnd,
       };
 
       await repository.CreateAsync(car);
@@ -80,6 +83,9 @@ public static class CarsEndpoints
       existingCar.Transmission = updatedCarDto.Transmission;
       existingCar.Description = updatedCarDto.Description;
       existingCar.Price = updatedCarDto.Price;
+      existingCar.City = updatedCarDto.City;
+      existingCar.AvailabilityStart = updatedCarDto.AvailabilityStart;
+      existingCar.AvailabilityEnd = updatedCarDto.AvailabilityEnd;
 
       await repository.UpdateAsync(existingCar);
       return Results.NoContent();

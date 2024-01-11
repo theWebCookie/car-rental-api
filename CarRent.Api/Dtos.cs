@@ -15,7 +15,10 @@ public record CarDto(
     double FuelUsage,
     string CarType,
     string Description,
-    decimal Price
+    decimal Price,
+    string City,
+    DateTime AvailabilityStart,
+    DateTime AvailabilityEnd
 );
 
 public record CreateCarDto(
@@ -29,7 +32,10 @@ public record CreateCarDto(
   [Required] double FuelUsage,
   [Required] string CarType,
   [Required] string Description,
-  [Required] decimal Price
+  [Required] decimal Price,
+  [Required] string City,
+  [Required] DateTime AvailabilityStart,
+  DateTime AvailabilityEnd
 );
 
 public record UpdateCarDto(
@@ -43,7 +49,10 @@ public record UpdateCarDto(
   [Required] double FuelUsage,
   [Required] string CarType,
   [Required] string Description,
-  [Required] decimal Price
+  [Required] decimal Price,
+  [Required] string City,
+  [Required] DateTime AvailabilityStart,
+  DateTime AvailabilityEnd
 );
 
 public record ReservationDto(
@@ -88,4 +97,9 @@ public record UpdateUserDto(
   [Required] string SeccondName,
   [Required] string Email,
   [Required] string Password
+);
+
+public record DateTimeRangeDto(
+  [Required] DateTime StartDate,
+  [Required] DateTime EndDate
 );
