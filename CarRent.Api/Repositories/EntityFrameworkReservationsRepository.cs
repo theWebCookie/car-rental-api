@@ -39,5 +39,14 @@ namespace CarRent.Api.Repositories
     {
       await dbContext.Reservations.Where(reservation => reservation.Id == id).ExecuteDeleteAsync();
     }
+
+    public async Task<IEnumerable<Reservation>> GetReservationsByUserIdAsync(int userId)
+    {
+      var reservations = await dbContext.Reservations
+          .Where(r => r.UserId == userId)
+          .ToListAsync();
+
+      return reservations;
+    }
   }
 }

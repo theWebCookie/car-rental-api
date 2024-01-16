@@ -1,4 +1,4 @@
-using CarRent.Api.Authorization;
+using System.Security.Claims;
 using CarRent.Api.Dtos;
 using CarRent.Api.Entities;
 using CarRent.Api.Repositories;
@@ -12,7 +12,9 @@ public static class ReservationsEndpoints
   {
     var group = routes.MapGroup("/reservations").WithParameterValidation();
 
-    group.MapGet("/", async (IReservationsRepository repository) => (await repository.GetAllAsync()).Select(reservation => reservation.AsDto()));
+    group.MapGet("/", async (IReservationsRepository repository) => (await repository.GetAllAsync()).Select(reservation => reservation.AsDto()))
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     group.MapGet("/{id}", async (IReservationsRepository repository, int id) =>
     {
@@ -20,7 +22,32 @@ public static class ReservationsEndpoints
       return reservation is not null ? Results.Ok(reservation.AsDto()) : Results.NotFound();
     })
     .WithName(GetReservationEndpointName)
-    .RequireAuthorization(Policies.ReadAccess);
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
+
+    group.MapGet("/user/{userId}", async (IReservationsRepository repository, int userId, ClaimsPrincipal user) =>
+    {
+      // Print claims for debugging
+      foreach (var claim in user.Claims)
+      {
+        Console.WriteLine($"Claim Type: {claim.Type}, Value: {claim.Value}");
+      }
+
+      var userIdClaim = user.Claims.FirstOrDefault(c => c.Value == userId.ToString());
+
+      if (userIdClaim == null)
+      {
+        return Results.Unauthorized();
+      }
+
+      IEnumerable<Reservation> reservations = await repository.GetReservationsByUserIdAsync(userId);
+
+      return reservations.Any()
+          ? Results.Ok(reservations.Select(reservation => reservation.AsDto()))
+          : Results.NotFound();
+    })
+    .WithName("GetUserReservationsEndpoint")
+    .RequireAuthorization();
 
     group.MapPost("/", async (IReservationsRepository repository, CreateReservationDto reservationDto) =>
     {
@@ -35,10 +62,7 @@ public static class ReservationsEndpoints
       await repository.CreateAsync(reservation);
       return Results.CreatedAtRoute(GetReservationEndpointName, new { id = reservation.Id }, reservation);
     })
-    .RequireAuthorization(policy =>
-    {
-      policy.RequireRole("Admin");
-    });
+    .RequireAuthorization();
 
     group.MapPut("/{id}", async (IReservationsRepository repository, int id, UpdateReservationDto updatedReservationDto) =>
     {
@@ -56,10 +80,8 @@ public static class ReservationsEndpoints
       await repository.UpdateAsync(existingReservation);
       return Results.NoContent();
     })
-    .RequireAuthorization(policy =>
-    {
-      policy.RequireRole("Admin");
-    });
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     group.MapDelete("/{id}", async (IReservationsRepository repository, int id) =>
     {
@@ -71,10 +93,8 @@ public static class ReservationsEndpoints
 
       return Results.NoContent();
     })
-    .RequireAuthorization(policy =>
-    {
-      policy.RequireRole("Admin");
-    });
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     return group;
   }
