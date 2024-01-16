@@ -52,19 +52,25 @@
 - **Endpoint**: `/reservations/{id}`
 - **Action**: Retrieves information about a reservation based on the provided ID.
 
-### 3. Add a new Reservation
+### 3. Retrieve all Reservations by user ID
+
+- **Method**: GET
+- **Endpoint**: `/reservations/user/{id}`
+- **Action**: Retrieves information about a reservation based on the provided ID.
+
+### 4. Add a new Reservation
 
 - **Method**: POST
 - **Endpoint**: `/reservations/`
 - **Action**: Creates a new reservation based on the provided data.
 
-### 4. Update information for a Reservation by ID
+### 5. Update information for a Reservation by ID
 
 - **Method**: PUT
 - **Endpoint**: `/reservations/{id}`
 - **Action**: Updates information about a reservation based on the provided data.
 
-### 5. Delete a Reservation by ID
+### 6. Delete a Reservation by ID
 
 - **Method**: DELETE
 - **Endpoint**: `/reservations/{id}`
