@@ -82,7 +82,8 @@ public record UserDto(
     string FirstName,
     string SeccondName,
     string Email,
-    string Password
+    string Password,
+    string? Role
 );
 
 public record LoginDto(
@@ -94,14 +95,16 @@ public record CreateUserDto(
   [Required] string FirstName,
   [Required] string SeccondName,
   [Required] string Email,
-  [Required] string Password
+  [Required] string Password,
+  string? Role
 );
 
 public record UpdateUserDto(
   [Required] string FirstName,
   [Required] string SeccondName,
   [Required] string Email,
-  [Required] string Password
+  [Required] string Password,
+  string? Role
 );
 
 public record DateTimeRangeDto(

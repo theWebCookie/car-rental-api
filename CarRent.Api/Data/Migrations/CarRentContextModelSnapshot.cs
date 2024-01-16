@@ -131,6 +131,9 @@ namespace CarRent.Api.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SeccondName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

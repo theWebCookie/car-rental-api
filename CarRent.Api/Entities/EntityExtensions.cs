@@ -42,7 +42,8 @@ public static class EntityExtensions
             user.FirstName,
             user.SeccondName,
             user.Email,
-            user.Password
+            user.Password,
+            user.Role
         );
     }
 }

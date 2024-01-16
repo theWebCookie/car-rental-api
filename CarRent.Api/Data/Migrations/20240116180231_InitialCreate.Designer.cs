@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRent.Api.Data.Migrations
 {
     [DbContext(typeof(CarRentContext))]
-    [Migration("20240111155613_InitialCreate")]
+    [Migration("20240116180231_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -132,6 +132,9 @@ namespace CarRent.Api.Data.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SeccondName")
