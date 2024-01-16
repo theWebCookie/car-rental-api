@@ -27,12 +27,6 @@ public static class ReservationsEndpoints
 
     group.MapGet("/user/{userId}", async (IReservationsRepository repository, int userId, ClaimsPrincipal user) =>
     {
-      // Print claims for debugging
-      foreach (var claim in user.Claims)
-      {
-        Console.WriteLine($"Claim Type: {claim.Type}, Value: {claim.Value}");
-      }
-
       var userIdClaim = user.Claims.FirstOrDefault(c => c.Value == userId.ToString());
 
       if (userIdClaim == null)
