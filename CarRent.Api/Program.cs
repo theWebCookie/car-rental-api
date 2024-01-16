@@ -1,13 +1,36 @@
-using CarRent.Api.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using CarRent.Api.Data;
 using CarRent.Api.Endpoints;
-using CarRent.Api.Repositories;
+using CarRent.Api.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddRepositories(builder.Configuration);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+      options.TokenValidationParameters = new TokenValidationParameters
+      {
+        ValidateIssuerSigningKey = true,
+        // change key
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("jwtKey")),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudiences = new[] { "http://localhost:6044", "https://localhost:44391", "http://localhost:5046", "https://localhost:7119" },
+        ValidIssuers = new[] { "dotnet-user-jwts" },
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+      };
+    });
 
-builder.Services.AddAuthentication().AddJwtBearer();
-builder.Services.AddCarStoreAuthorization();
+builder.Services.AddRepositories(builder.Configuration);
+builder.Services.AddAuthorization(options =>
+{
+  options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+});
 
 var app = builder.Build();
 
@@ -15,4 +38,6 @@ await app.Services.InitializeDbAsync();
 app.MapCarsEndpoints();
 app.MapUsersEndpoints();
 app.MapReservationsEndpoints();
+app.UseAuthentication();
+app.UseAuthorization();
 app.Run();

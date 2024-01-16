@@ -10,8 +10,8 @@ public class CarRentContext : DbContext
     public CarRentContext(DbContextOptions<CarRentContext> options) : base(options) { }
 
     public DbSet<Car> Cars => Set<Car>();
-    public DbSet<User> Users => Set<User>();
     public DbSet<Reservation> Reservations => Set<Reservation>();
+    public DbSet<User> Users => Set<User>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new CarConfiguration());

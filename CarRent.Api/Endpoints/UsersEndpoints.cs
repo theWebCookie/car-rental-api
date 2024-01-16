@@ -1,7 +1,10 @@
-using CarRent.Api.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using CarRent.Api.Dtos;
 using CarRent.Api.Entities;
 using CarRent.Api.Repositories;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CarRent.Api.Endpoints;
 
@@ -12,7 +15,8 @@ public static class UsersEndpoints
   {
     var group = routes.MapGroup("/users").WithParameterValidation();
 
-    group.MapGet("/", async (IUsersRepository repository) => (await repository.GetAllAsync()).Select(user => user.AsDto()));
+    group.MapGet("/", async (IUsersRepository repository) => (await repository.GetAllAsync()).Select(user => user.AsDto())).RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     group.MapGet("/{id}", async (IUsersRepository repository, int id) =>
     {
@@ -20,7 +24,7 @@ public static class UsersEndpoints
       return user is not null ? Results.Ok(user.AsDto()) : Results.NotFound();
     })
     .WithName(GetUserEndpointName)
-    .RequireAuthorization(Policies.ReadAccess);
+    .RequireAuthorization("AdminPolicy");
 
     group.MapPost("/", async (IUsersRepository repository, CreateUserDto userDto) =>
     {
@@ -51,13 +55,45 @@ public static class UsersEndpoints
         FirstName = userDto.FirstName,
         SeccondName = userDto.SeccondName,
         Email = userDto.Email,
-        Password = userDto.Password
+        Password = userDto.Password,
+        Role = userDto.Role
       };
 
       await repository.CreateAsync(user);
-      return Results.CreatedAtRoute(GetUserEndpointName, new { id = user.Id }, user);
-    })
-    .RequireAuthorization(Policies.WriteAccess);
+
+      var tokenHandler = new JwtSecurityTokenHandler();
+      // hide key
+      var key = Encoding.UTF8.GetBytes("jwtKey");
+
+      var claims = new List<Claim>
+      {
+        new Claim(ClaimTypes.Name, user.Id.ToString()),
+        new Claim("aud", "http://localhost:6044"),
+        new Claim("aud", "https://localhost:44391"),
+        new Claim("aud", "http://localhost:5046"),
+        new Claim("aud", "https://localhost:7119"),
+        new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString()),
+        new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.UtcNow.AddHours(1)).ToUnixTimeSeconds().ToString()),
+        new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer),
+        new Claim(JwtRegisteredClaimNames.Iss, "dotnet-user-jwts")
+      };
+
+      if (!string.IsNullOrEmpty(userDto.Role) && userDto.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+      {
+        claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+      }
+
+      var tokenDescriptor = new SecurityTokenDescriptor
+      {
+        Subject = new ClaimsIdentity(claims),
+        Expires = DateTime.UtcNow.AddHours(1),
+        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+      };
+      var token = tokenHandler.CreateToken(tokenDescriptor);
+      var tokenString = tokenHandler.WriteToken(token);
+
+      return Results.Ok(new { userId = user.Id, token = tokenString });
+    });
 
     group.MapPost("/login", async (IUsersRepository repository, LoginDto loginDto) =>
     {
@@ -65,12 +101,42 @@ public static class UsersEndpoints
 
       if (user != null && user.Password == loginDto.Password)
       {
-        return Results.Ok(new { message = "Login successful!" });
+        var tokenHandler = new JwtSecurityTokenHandler();
+        // hide key
+        var key = Encoding.UTF8.GetBytes("jwtKey");
+
+        var claims = new List<Claim>
+        {
+          new Claim(ClaimTypes.Name, user.Id.ToString()),
+          new Claim("aud", "http://localhost:6044"),
+          new Claim("aud", "https://localhost:44391"),
+          new Claim("aud", "http://localhost:5046"),
+          new Claim("aud", "https://localhost:7119"),
+          new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString()),
+          new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.UtcNow.AddHours(1)).ToUnixTimeSeconds().ToString()),
+          new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer),
+          new Claim(JwtRegisteredClaimNames.Iss, "dotnet-user-jwts")
+        };
+
+        if (!string.IsNullOrEmpty(user.Role) && user.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+        {
+          claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+        }
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+          Subject = new ClaimsIdentity(claims),
+          Expires = DateTime.UtcNow.AddHours(1),
+          SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenString = tokenHandler.WriteToken(token);
+
+        return Results.Ok(new { userId = user.Id, token = tokenString });
       }
 
       return Results.BadRequest(new { message = "Invalid email or password." });
-    })
-    .RequireAuthorization(Policies.WriteAccess);
+    });
 
     group.MapPut("/{id}", async (IUsersRepository repository, int id, UpdateUserDto updatedUserDto) =>
     {
@@ -84,11 +150,13 @@ public static class UsersEndpoints
       existingUser.SeccondName = updatedUserDto.SeccondName;
       existingUser.Email = updatedUserDto.Email;
       existingUser.Password = updatedUserDto.Password;
+      existingUser.Role = updatedUserDto.Role;
 
       await repository.UpdateAsync(existingUser);
       return Results.NoContent();
     })
-    .RequireAuthorization(Policies.WriteAccess);
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     group.MapDelete("/{id}", async (IUsersRepository repository, int id) =>
     {
@@ -100,10 +168,8 @@ public static class UsersEndpoints
 
       return Results.NoContent();
     })
-    .RequireAuthorization(policy =>
-    {
-      policy.RequireRole("Admin");
-    });
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     return group;
   }

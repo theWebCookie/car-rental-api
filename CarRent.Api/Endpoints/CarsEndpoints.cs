@@ -1,7 +1,7 @@
-using CarRent.Api.Authorization;
 using CarRent.Api.Dtos;
 using CarRent.Api.Entities;
 using CarRent.Api.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarRent.Api.Endpoints;
 
@@ -19,8 +19,7 @@ public static class CarsEndpoints
       Car? car = await repository.GetAsync(id);
       return car is not null ? Results.Ok(car.AsDto()) : Results.NotFound();
     })
-    .WithName(GetCarEndpointName)
-    .RequireAuthorization(Policies.ReadAccess);
+    .WithName(GetCarEndpointName);
 
     group.MapGet("/type/{carType}", async (ICarsRepository repository, string carType) =>
     {
@@ -34,7 +33,7 @@ public static class CarsEndpoints
 
       var carDtos = carsOfType.Select(car => car.AsDto());
       return Results.Ok(carDtos);
-    }).RequireAuthorization(Policies.ReadAccess);
+    });
 
     group.MapPost("/", async (ICarsRepository repository, CreateCarDto carDto) =>
     {
@@ -59,10 +58,8 @@ public static class CarsEndpoints
       await repository.CreateAsync(car);
       return Results.CreatedAtRoute(GetCarEndpointName, new { id = car.Id }, car);
     })
-    .RequireAuthorization(policy =>
-    {
-      policy.RequireRole("Admin");
-    });
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     group.MapPut("/{id}", async (ICarsRepository repository, int id, UpdateCarDto updatedCarDto) =>
     {
@@ -90,10 +87,8 @@ public static class CarsEndpoints
       await repository.UpdateAsync(existingCar);
       return Results.NoContent();
     })
-    .RequireAuthorization(policy =>
-    {
-      policy.RequireRole("Admin");
-    });
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     group.MapDelete("/{id}", async (ICarsRepository repository, int id) =>
     {
@@ -105,10 +100,8 @@ public static class CarsEndpoints
 
       return Results.NoContent();
     })
-    .RequireAuthorization(policy =>
-    {
-      policy.RequireRole("Admin");
-    });
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     return group;
   }
