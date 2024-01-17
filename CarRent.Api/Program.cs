@@ -4,9 +4,13 @@ using System.Text;
 using CarRent.Api.Data;
 using CarRent.Api.Endpoints;
 using CarRent.Api.Entities;
+using DotNetEnv.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+
+DotNetEnv.Env.Load();
+string secretKey = DotNetEnv.Env.GetString("KEY");
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -15,8 +19,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       options.TokenValidationParameters = new TokenValidationParameters
       {
         ValidateIssuerSigningKey = true,
-        // change key
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("jwtKey")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidAudiences = new[] { "http://localhost:6044", "https://localhost:44391", "http://localhost:5046", "https://localhost:7119" },

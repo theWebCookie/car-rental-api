@@ -11,6 +11,7 @@ namespace CarRent.Api.Endpoints;
 public static class UsersEndpoints
 {
   const string GetUserEndpointName = "GetUserById";
+
   public static RouteGroupBuilder MapUsersEndpoints(this IEndpointRouteBuilder routes)
   {
     var group = routes.MapGroup("/users").WithParameterValidation();
@@ -62,8 +63,9 @@ public static class UsersEndpoints
       await repository.CreateAsync(user);
 
       var tokenHandler = new JwtSecurityTokenHandler();
-      // hide key
-      var key = Encoding.UTF8.GetBytes("jwtKey");
+      DotNetEnv.Env.Load();
+      string secretKey = DotNetEnv.Env.GetString("KEY");
+      var key = Encoding.UTF8.GetBytes(secretKey);
 
       var claims = new List<Claim>
       {
@@ -102,8 +104,9 @@ public static class UsersEndpoints
       if (user != null && user.Password == loginDto.Password)
       {
         var tokenHandler = new JwtSecurityTokenHandler();
-        // hide key
-        var key = Encoding.UTF8.GetBytes("jwtKey");
+        DotNetEnv.Env.Load();
+        string secretKey = DotNetEnv.Env.GetString("KEY");
+        var key = Encoding.UTF8.GetBytes(secretKey);
 
         var claims = new List<Claim>
         {
