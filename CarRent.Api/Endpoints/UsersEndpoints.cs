@@ -19,13 +19,30 @@ public static class UsersEndpoints
     group.MapGet("/", async (IUsersRepository repository) => (await repository.GetAllAsync()).Select(user => user.AsDto())).RequireAuthorization()
     .RequireAuthorization("AdminPolicy");
 
-    group.MapGet("/{id}", async (IUsersRepository repository, int id) =>
+    group.MapGet("/{id}", async (IUsersRepository repository, int id, ClaimsPrincipal user) =>
     {
-      User? user = await repository.GetAsync(id);
-      return user is not null ? Results.Ok(user.AsDto()) : Results.NotFound();
+      var requestingUserIdClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+
+      if (requestingUserIdClaim == null || !int.TryParse(requestingUserIdClaim.Value, out int requestingUserId))
+      {
+        return Results.Unauthorized(); ;
+      }
+
+      if (requestingUserId != id)
+      {
+        return Results.Unauthorized();
+      }
+
+      var authorizedUser = await repository.GetAsync(id);
+
+      if (authorizedUser == null)
+      {
+        return Results.NotFound();
+      }
+      return Results.Ok(authorizedUser.AsDto());
     })
     .WithName(GetUserEndpointName)
-    .RequireAuthorization("AdminPolicy");
+    .RequireAuthorization();
 
     group.MapPost("/", async (IUsersRepository repository, CreateUserDto userDto) =>
     {
