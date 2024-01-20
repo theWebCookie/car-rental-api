@@ -100,6 +100,9 @@ namespace CarRent.Api.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 

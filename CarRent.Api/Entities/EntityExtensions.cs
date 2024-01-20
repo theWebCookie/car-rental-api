@@ -30,6 +30,7 @@ public static class EntityExtensions
             reservation.Id,
             reservation.StartDate,
             reservation.EndDate,
+            reservation.Price,
             reservation.UserId,
             reservation.CarId
         );

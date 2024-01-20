@@ -1,12 +1,7 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using CarRent.Api.Data;
 using CarRent.Api.Endpoints;
-using CarRent.Api.Entities;
-using DotNetEnv.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 DotNetEnv.Env.Load();

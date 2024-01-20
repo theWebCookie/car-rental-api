@@ -27,18 +27,14 @@ public static class ReservationsEndpoints
 
     group.MapGet("/user/{userId}", async (IReservationsRepository repository, int userId, ClaimsPrincipal user) =>
     {
-      var userIdClaim = user.Claims.FirstOrDefault(c => c.Value == userId.ToString());
-
-      if (userIdClaim == null)
+      if (user == null || user.Claims.All(c => c.Value != userId.ToString()))
       {
         return Results.Unauthorized();
       }
 
       IEnumerable<Reservation> reservations = await repository.GetReservationsByUserIdAsync(userId);
 
-      return reservations.Any()
-          ? Results.Ok(reservations.Select(reservation => reservation.AsDto()))
-          : Results.NotFound();
+      return Results.Ok(reservations.Select(reservation => reservation.AsDto()));
     })
     .WithName("GetUserReservationsEndpoint")
     .RequireAuthorization();
@@ -50,7 +46,8 @@ public static class ReservationsEndpoints
         StartDate = reservationDto.StartDate,
         EndDate = reservationDto.EndDate,
         UserId = reservationDto.UserId,
-        CarId = reservationDto.CarId
+        CarId = reservationDto.CarId,
+        Price = reservationDto.Price,
       };
 
       await repository.CreateAsync(reservation);
@@ -70,12 +67,12 @@ public static class ReservationsEndpoints
       existingReservation.EndDate = updatedReservationDto.EndDate;
       existingReservation.UserId = updatedReservationDto.UserId;
       existingReservation.CarId = updatedReservationDto.CarId;
+      existingReservation.Price = updatedReservationDto.Price;
 
       await repository.UpdateAsync(existingReservation);
       return Results.NoContent();
     })
-    .RequireAuthorization()
-    .RequireAuthorization("AdminPolicy");
+    .RequireAuthorization();
 
     group.MapDelete("/{id}", async (IReservationsRepository repository, int id) =>
     {
