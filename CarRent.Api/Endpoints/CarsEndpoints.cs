@@ -61,6 +61,22 @@ public static class CarsEndpoints
     .RequireAuthorization()
     .RequireAuthorization("AdminPolicy");
 
+    group.MapPut("/updateavailability/{id}", async (ICarsRepository repository, int id, UpdateCarAvailabilityDto updatedAvailabilityDto) =>
+    {
+      Car? existingCar = await repository.GetAsync(id);
+      if (existingCar is null)
+      {
+        return Results.NotFound();
+      }
+
+      existingCar.AvailabilityStart = updatedAvailabilityDto.AvailabilityStart;
+      existingCar.AvailabilityEnd = updatedAvailabilityDto.AvailabilityEnd;
+
+      await repository.UpdateAsync(existingCar);
+      return Results.NoContent();
+    })
+    .RequireAuthorization();
+
     group.MapPut("/{id}", async (ICarsRepository repository, int id, UpdateCarDto updatedCarDto) =>
     {
       Car? existingCar = await repository.GetAsync(id);

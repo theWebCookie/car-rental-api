@@ -72,7 +72,8 @@ public static class ReservationsEndpoints
       await repository.UpdateAsync(existingReservation);
       return Results.NoContent();
     })
-    .RequireAuthorization();
+    .RequireAuthorization()
+    .RequireAuthorization("AdminPolicy");
 
     group.MapDelete("/{id}", async (IReservationsRepository repository, int id) =>
     {

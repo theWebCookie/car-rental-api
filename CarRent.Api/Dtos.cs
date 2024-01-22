@@ -114,3 +114,9 @@ public record DateTimeRangeDto(
   [Required] DateTime StartDate,
   [Required] DateTime EndDate
 );
+
+public class UpdateCarAvailabilityDto
+{
+  public DateTime AvailabilityStart { get; set; }
+  public DateTime AvailabilityEnd { get; set; }
+}
