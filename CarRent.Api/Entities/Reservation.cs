@@ -18,4 +18,5 @@ public class Reservation
     [ForeignKey("CarId")]
     public required int CarId { get; set; }
     public required decimal Price { get; set; }
+    public string? Options { get; set; }
 }

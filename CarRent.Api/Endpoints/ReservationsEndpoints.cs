@@ -48,6 +48,7 @@ public static class ReservationsEndpoints
         UserId = reservationDto.UserId,
         CarId = reservationDto.CarId,
         Price = reservationDto.Price,
+        Options = reservationDto.Options
       };
 
       await repository.CreateAsync(reservation);
@@ -68,6 +69,7 @@ public static class ReservationsEndpoints
       existingReservation.UserId = updatedReservationDto.UserId;
       existingReservation.CarId = updatedReservationDto.CarId;
       existingReservation.Price = updatedReservationDto.Price;
+      existingReservation.Options = updatedReservationDto.Options;
 
       await repository.UpdateAsync(existingReservation);
       return Results.NoContent();

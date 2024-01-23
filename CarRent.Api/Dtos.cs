@@ -60,6 +60,7 @@ public record ReservationDto(
     DateTime StartDate,
     DateTime EndDate,
     decimal Price,
+    string Options,
     int UserId,
     int CarId
 );
@@ -68,6 +69,7 @@ public record CreateReservationDto(
   [Required] DateTime StartDate,
   [Required] DateTime EndDate,
   [Required] decimal Price,
+  string Options,
   [Required] int UserId,
   [Required] int CarId
 );
@@ -76,6 +78,7 @@ public record UpdateReservationDto(
   [Required] DateTime StartDate,
   [Required] DateTime EndDate,
   [Required] decimal Price,
+  string Options,
   [Required] int UserId,
   [Required] int CarId
 );
